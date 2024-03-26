@@ -1,7 +1,7 @@
 package curso.spring.controller;
 
-import curso.spring.domain.entity.Cliente;
-import curso.spring.domain.repository.Clientes;
+import curso.spring.domain.entity.Produto;
+import curso.spring.domain.repository.Produtos;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
@@ -13,27 +13,27 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/api/clientes")
-public class ClienteController {
+@RequestMapping("/api/produtos")
+public class ProdutoController {
 
-    private static final String CLIENTE_NAO_ENCONTRADO = "Cliente nao encontrado";
-    private Clientes repository;
+    private static final String CLIENTE_NAO_ENCONTRADO = "Produto nao encontrado";
+    private Produtos repository;
 
 
-    public ClienteController(Clientes repository) {
+    public ProdutoController(Produtos repository) {
         this.repository = repository;
     }
 
     @GetMapping(value = "{id}")
-    public Cliente getClienteById(@PathVariable("id") Integer id) {
+    public Produto getProdutoById(@PathVariable("id") Integer id) {
         return this.repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, CLIENTE_NAO_ENCONTRADO));
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Cliente save(@RequestBody Cliente cliente) {
-        return repository.save(cliente);
+    public Produto save(@RequestBody Produto produto) {
+        return repository.save(produto);
     }
 
     @DeleteMapping("{id}")
@@ -47,22 +47,21 @@ public class ClienteController {
     }
 
     @PutMapping("{id}")
-    public void update(@PathVariable Integer id, @RequestBody Cliente cliente) {
-        repository.findById(id).map(clienteEncontrado -> {
-            clienteEncontrado.setNome(cliente.getNome());
-            cliente.setId(clienteEncontrado.getId());
-            repository.save(cliente);
+    public void update(@PathVariable Integer id, @RequestBody Produto produto) {
+        repository.findById(id).map(produtoEncontrado -> {
+            produto.setId(produtoEncontrado.getId());
+            repository.save(produto);
             return ResponseEntity.noContent().build();
         }).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, CLIENTE_NAO_ENCONTRADO));
     }
 
     @GetMapping
-    public List<Cliente> find(Cliente filtro) {
+    public List<Produto> find(Produto filtro) {
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
                 .withIgnoreCase()
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-        Example<Cliente> example = Example.of(filtro, matcher);
+        Example<Produto> example = Example.of(filtro, matcher);
         return repository.findAll(example);
     }
 
