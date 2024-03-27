@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +33,7 @@ public class PedidoController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Integer save(@RequestBody PedidoDTO pedido) {
+    public Integer save(@RequestBody @Valid PedidoDTO pedido) {
         return this.services.salvar(pedido).getId();
     }
 

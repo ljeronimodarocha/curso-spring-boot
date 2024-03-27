@@ -12,4 +12,10 @@ public class ApiErrors {
     public ApiErrors(String error) {
         this.errors = Collections.singletonList(error);
     }
+
+    public ApiErrors(List<String> errors) {
+        this.errors = errors;
+    }
 }
+
+
