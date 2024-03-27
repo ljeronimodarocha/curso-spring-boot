@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -27,7 +28,7 @@ public class ClienteController {
     @GetMapping(value = "{id}")
     public Cliente getClienteById(@PathVariable("id") Integer id) {
         return this.repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, CLIENTE_NAO_ENCONTRADO));
+                .orElseThrow(() -> new EntityNotFoundException(CLIENTE_NAO_ENCONTRADO));
     }
 
     @PostMapping
@@ -43,7 +44,7 @@ public class ClienteController {
                     repository.delete(cliente);
                     return Void.TYPE;
                 })
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, CLIENTE_NAO_ENCONTRADO));
+                .orElseThrow(() -> new EntityNotFoundException( CLIENTE_NAO_ENCONTRADO));
     }
 
     @PutMapping("{id}")
@@ -53,7 +54,7 @@ public class ClienteController {
             cliente.setId(clienteEncontrado.getId());
             repository.save(cliente);
             return ResponseEntity.noContent().build();
-        }).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, CLIENTE_NAO_ENCONTRADO));
+        }).orElseThrow(() -> new EntityNotFoundException( CLIENTE_NAO_ENCONTRADO));
     }
 
     @GetMapping
