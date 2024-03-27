@@ -9,7 +9,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.Locale;
 
 @Configuration
-public class internacionalidazaoConfig {
+public class InternacionalidazaoConfig {
 
     @Bean
     public MessageSource messageSource() {
