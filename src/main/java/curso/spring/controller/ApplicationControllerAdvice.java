@@ -1,40 +1,81 @@
 package curso.spring.controller;
 
+import curso.spring.exception.ExceptionDetails;
 import curso.spring.exception.RegraNegocioException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import curso.spring.exception.UsuarioOuSenhaInvalidaException;
+import curso.spring.exception.ValidationExceptionDetails;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class ApplicationControllerAdvice {
 
     @ExceptionHandler(RegraNegocioException.class)
     @ResponseStatus(BAD_REQUEST)
-    public ApiErrors handleRegraNegocioException(RegraNegocioException ex) {
-        String mensagemErro = ex.getMessage();
-        return new ApiErrors(mensagemErro);
+    public ExceptionDetails handleRegraNegocioException(RegraNegocioException ex) {
+        return ExceptionDetails.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .title(ex.getMessage())
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .build();
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(NOT_FOUND)
-    public ApiErrors handleEntityNotFoundException(EntityNotFoundException ex) {
-        String mensagemErro = ex.getMessage();
-        return new ApiErrors(mensagemErro);
+    public ExceptionDetails handleEntityNotFoundException(EntityNotFoundException ex) {
+        return ExceptionDetails.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .title("Entity not found")
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(BAD_REQUEST)
-    public ApiErrors handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        List<String> erros = ex.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
-        return new ApiErrors(erros);
+    public ValidationExceptionDetails handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+
+        String fields = fieldErrors.stream().map(FieldError::getField)
+                .collect(Collectors.joining(", "));
+        String fieldsMessage = fieldErrors.stream().map(FieldError::getDefaultMessage)
+                .collect(Collectors.joining(", "));
+        return ValidationExceptionDetails.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .title("Bad Request Exception, Invalid Fields")
+                .details("Check the field(s) error")
+                .developerMessage(ex.getClass().getName())
+                .fields(fields)
+                .fieldsMessage(fieldsMessage)
+                .build();
     }
+
+    @ExceptionHandler(UsuarioOuSenhaInvalidaException.class)
+    @ResponseStatus(UNAUTHORIZED)
+    public ExceptionDetails handleMethodUsuarioOuSenhaInvalidaException(UsuarioOuSenhaInvalidaException ex) {
+        return ExceptionDetails.builder()
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass()
+                        .getName())
+                .title("UNAUTHORIZED")
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+
 }

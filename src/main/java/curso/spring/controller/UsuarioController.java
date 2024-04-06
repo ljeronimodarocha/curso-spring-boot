@@ -3,7 +3,7 @@ package curso.spring.controller;
 import curso.spring.domain.entity.Usuario;
 import curso.spring.dto.CredenciasDTO;
 import curso.spring.dto.TokenDTO;
-import curso.spring.exception.SenhaInvalidaException;
+import curso.spring.exception.UsuarioOuSenhaInvalidaException;
 import curso.spring.security.jwt.Jwtservice;
 import curso.spring.services.impl.UsuarioServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +40,8 @@ public class UsuarioController {
             String token = String.format("Bearer %s", jwtservice.gerarToken(usuario));
             response.addHeader("Authorization", token);
             return new TokenDTO(usuario.getLogin(), token);
-        } catch (UsernameNotFoundException | SenhaInvalidaException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (UsernameNotFoundException | UsuarioOuSenhaInvalidaException e) {
+            throw new UsuarioOuSenhaInvalidaException();
         }
     }
 }

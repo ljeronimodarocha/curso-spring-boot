@@ -2,7 +2,7 @@ package curso.spring.services.impl;
 
 import curso.spring.domain.entity.Usuario;
 import curso.spring.domain.repository.UsuarioRepository;
-import curso.spring.exception.SenhaInvalidaException;
+import curso.spring.exception.UsuarioOuSenhaInvalidaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +26,7 @@ public class UsuarioServiceImpl implements UserDetailsService {
         if (senhaValida)
             return user;
 
-        throw new SenhaInvalidaException();
+        throw new UsuarioOuSenhaInvalidaException();
     }
 
     @Override
