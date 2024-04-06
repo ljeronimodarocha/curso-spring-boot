@@ -4,6 +4,7 @@ import curso.spring.exception.ExceptionDetails;
 import curso.spring.exception.RegraNegocioException;
 import curso.spring.exception.UsuarioOuSenhaInvalidaException;
 import curso.spring.exception.ValidationExceptionDetails;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -73,6 +74,17 @@ public class ApplicationControllerAdvice {
                 .developerMessage(ex.getClass()
                         .getName())
                 .title("UNAUTHORIZED")
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ExceptionDetails handleMethodConstraintViolationException(ConstraintViolationException ex) {
+        return ExceptionDetails.builder()
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass()
+                        .getName())
+                .title("Registro ja cadastrado")
                 .timestamp(LocalDateTime.now())
                 .build();
     }

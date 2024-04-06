@@ -13,12 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class jwtAuthFilter extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
     private Jwtservice jwtservice;
     private UsuarioServiceImpl usuarioService;
 
-    public jwtAuthFilter(Jwtservice jwtservice, UsuarioServiceImpl usuarioService) {
+    public JwtAuthFilter(Jwtservice jwtservice, UsuarioServiceImpl usuarioService) {
         this.jwtservice = jwtservice;
         this.usuarioService = usuarioService;
     }

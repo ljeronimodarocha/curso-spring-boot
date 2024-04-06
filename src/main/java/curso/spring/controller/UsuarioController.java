@@ -7,10 +7,8 @@ import curso.spring.exception.UsuarioOuSenhaInvalidaException;
 import curso.spring.security.jwt.Jwtservice;
 import curso.spring.services.impl.UsuarioServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -28,8 +26,9 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Usuario salvar(@RequestBody @Valid Usuario usuario) {
-        return service.salvar(usuario);
+    public Usuario salvar(@RequestBody @Valid CredenciasDTO usuarioDTO) {
+
+        return service.salvar(Usuario.builder().login(usuarioDTO.getLogin()).senha(usuarioDTO.getSenha()).build());
     }
 
     @PostMapping("/auth")

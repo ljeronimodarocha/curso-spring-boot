@@ -3,7 +3,7 @@ package curso.spring.services.impl;
 import curso.spring.domain.entity.Usuario;
 import curso.spring.domain.repository.UsuarioRepository;
 import curso.spring.exception.UsuarioOuSenhaInvalidaException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,12 +12,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class UsuarioServiceImpl implements UserDetailsService {
 
-    @Autowired
     private PasswordEncoder encoder;
 
-    @Autowired
     private UsuarioRepository repository;
 
     public UserDetails autenticar(Usuario usuario) {
